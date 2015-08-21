@@ -1,0 +1,57 @@
+<div class="header">
+    <span class="icon-broadcast headerIcon"></span>
+    <span class="headtxt orange">DEPLOY</span>
+    <span class="headtxt small">{{m.userList[m.cUserIdx].name|uppercase}}</span>
+
+</div>
+
+<div class="eventName">{{m.eventList[m.cEventIdx].name|uppercase}}</div>
+<div deploymap class='currentUser'></div>
+
+
+
+<div class="userList">
+    <div class="users" ng-repeat="user in m.userList">
+        <span class="icon-broadcast smallIcon" style="color:{{user.color}}"></span>
+        <span class="userTxt">{{user.name|tc}}</span>
+        <span class="userTime" ng-show="user.lastTime<300" ng-class="{orange:user.lastTime>10,red:user.lastTime>30}">
+            ({{user.lastTime|int}}s)
+        </span>
+        <span class="userTime orange" ng-show="user.lastTime>300 && user.lastTime<3000" >
+            ({{user.lastTime/60|int}}min)
+        </span>
+
+        <span class="userTime red" ng-show="user.lastTime>3000">(na)</span>
+    </div>
+</div>
+
+
+<div class="beaconList">
+    <div class="users" ng-repeat="(mac, device) in d.devices">
+        <span class="userTxt">{{device.name|tc}}</span>
+        <span class="userTime">( {{device.rssi}}:{{device.count}} )</span>
+        <span class="userMac">{{mac}}</span>
+    </div>
+</div>
+
+
+<div class='buttons'>
+    <div class="button orange" ng-click='startPing()' ng-class="{outline:m.pingOn}">PING</div>
+    <div class="button blue" ng-click='changeEvent()'>CHANGE EVENT</div>
+    <div class="button blue" ng-click='changeUser()'>CHANGE USER</div>
+    <div class="button" ng-click="addTask(0)" ng-class="{outline:m.addTask==0}" 
+        style="background-color:{{m.userList[m.tasks[0][1]].color}}">
+      ADD <span class="icon-trash-bin"></span>
+    </div>
+    <div class="button" ng-click="addTask(1)" ng-class="{outline:m.addTask==1}"
+        style="background-color:{{m.userList[m.tasks[1][1]].color}}">
+      ADD <span class="icon-glass"></span>
+    </div>
+    <div class="button orange" ng-click='clearTasks()'>CLEAR TASKS</div>
+    <div class="button red" ng-click='clearCalib()'>CLR</div>
+</div>
+
+
+
+
+
