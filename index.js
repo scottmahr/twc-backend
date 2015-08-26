@@ -90,6 +90,7 @@ var boxSchema = new mongoose.Schema({
     website:{type: String, lowercase: true, trim: true},
     hours:{type: String, trim: true},
     dropInPolicy:{type: String, trim: true},
+    dropInRate: Number,
     dropInOffer:{type: String, trim: true},
     latitude:Number,
     longitude:Number,
@@ -138,16 +139,19 @@ router.get('/', function(req, res) {
 router.get('/logo', function(req, res) {
     //read from mongodb
     console.log("yep:"+req.query.id)
-    var readstream = gfs.createReadStream({
+    if(!!req.query.id){
+        var readstream = gfs.createReadStream({
          _id: req.query.id
-    });
+        });
 
-    readstream.on('error', function (err) {
-      console.log('An error occurred!', err);
-      throw err;
-    });
+        readstream.on('error', function (err) {
+          console.log('An error occurred!', err);
+          throw err;
+        });
 
-    readstream.pipe(res);
+        readstream.pipe(res);
+    }
+    
 });
 
 router.post('/loadLogo', function(req, res) {
@@ -242,6 +246,7 @@ router.route('/users/:user_id')
 // ----------------------------------------------------
 router.route('/boxes')
     .post(function(req, res) {
+        console.log(req.body)
         new Boxes(req.body).save(function(err,box) {
             if(err){
                 res.json({ error: err });;
