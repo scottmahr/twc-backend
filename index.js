@@ -63,6 +63,7 @@ var userSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: {type: String, lowercase: true, trim: true,required:true,unique:true},                    
     facebookID: String,
+    photoID: String,
     dropIns: { type: mongoose.Schema.Types.Mixed , default: [] }, //[boxID,boxName,boxLogoID,dropinDate,verified]
     goodStanding:Boolean,
     settings: { type: mongoose.Schema.Types.Mixed, default: {} },
