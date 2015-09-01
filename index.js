@@ -76,6 +76,18 @@ var userSchema = new mongoose.Schema({
     
 }, { versionKey: false });
 
+var dropInSchema = new mongoose.Schema({
+    cDate: { type: Date, default: Date.now },   //date item was created
+    date:  { type: String, required:true },  //a string of the visit date
+    boxID:mongoose.Schema.Types.ObjectId, 
+    userID:mongoose.Schema.Types.ObjectId,
+    verified: String,                  //'unverified','scanned','proximity','code'
+    review: { type: String, default: '' },   //text of review
+    rating: Number,                    //0-5 stars
+
+    
+}, { versionKey: false });
+
 var boxSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: { type: String, trim: true,required:true,unique:true},   //name of event
@@ -106,7 +118,7 @@ var boxSchema = new mongoose.Schema({
 
 var Users = mongoose.model('twcUsers', userSchema);
 var Boxes = mongoose.model('twcBoxes', boxSchema);
-
+var DropIns = mongoose.model('twcDropIns', dropInSchema);
 // In case the browser connects before the database is connected, the
 // user will see this message.
 var found = ['DB Connection not yet established.  Try again later.  Check the console output for error messages if this persists.'];
@@ -170,7 +182,7 @@ router.post('/loadLogo', function(req, res) {
 });
 
 
-// on routes that end in /reviews
+// on routes that end in /users
 // ----------------------------------------------------
 router.route('/users')
     .post(function(req, res) {
@@ -242,6 +254,78 @@ router.route('/users/:user_id')
         });
     })
 
+
+// on routes that end in /dropins
+// ----------------------------------------------------
+router.route('/dropins')
+    .post(function(req, res) {
+        new DropIns(req.body).save(function(err,dropIn) {
+            if(err){
+                res.json({ error: err });;
+            }else{
+                res.json(dropIn);
+            }
+        });
+    })
+
+    .get(function(req, res) {
+        DropIns.find(function(err, dropIns) {
+            if (err){
+                res.json({ error: err });
+            }else{
+                res.json(dropIns);
+            }
+        });
+    });
+
+router.route('/dropins/:dropIn_id')
+
+    // get the review with that id
+    .get(function(req, res) {
+        DropIns.findById(req.params.dropIn_id, function(err, dropIn) {
+            if (err){
+                res.json({ error: err });
+            }else{
+                res.json(dropIn);
+            }
+        });
+    })
+    // update the dropIn with this id
+    .put(function(req, res) {
+        DropIns.findById(req.params.dropIn_id, function(err, dropIn) {
+            if (err){
+                res.json({ error: err });
+            }
+            _.extend(dropIn,req.body).save(function(err,dropIn) {
+                if (err){
+                    res.json({ error: err });
+                }else{
+                    res.json(dropIn);
+                }
+            });
+
+        });
+    })
+        //delete dropIn
+    .delete(function(req, res) {
+        //first, get the dropIn and see if it has any reviews
+        DropIns.findById(req.params.dropIn_id, function(err, dropIn) {
+            if (err){
+                res.json({ error: 'error getting dropIn: ' +err });
+            }else{
+                DropIns.remove( {_id: dropIn._id}, 
+                    function(err) {
+                        if (err){
+                            res.json({ error: 'error removing lift: ' +err });
+                        }else{
+                            res.json({ sucess: 'removed dropIn' });
+                        }
+                    }
+                );
+                
+            }
+        });
+    })
 
 // on routes that end in /reviews
 // ----------------------------------------------------
