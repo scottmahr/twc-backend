@@ -9,6 +9,7 @@ var cors = require('cors');
 var Grid = require('gridfs-stream');
 var app = express();
 var fs = require('fs');
+var api = require('infusionsoft-api');
 
 
 app.use(cors());
@@ -19,7 +20,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 
-
+var infusionsoft = new api.DataContext('km260', '53cb5bf5adb610a65aa0a93206e2535b');
 
 
 // Here we find an appropriate database to connect to, defaulting to
@@ -149,6 +150,35 @@ router.get('/', function(req, res) {
 });
 
 // ----------------------------------------------------
+
+router.post('/checkLogin', function(req, res) {
+    //read from mongodb
+    //console.log(req.body.email)
+    //console.log(req.body.zip)
+
+    //first, look for that email
+    infusionsoft.ContactService
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','PostalCode'])
+        .then(function(output){
+            //console.log(output)
+            if(output.length==0){
+                res.json({status:'fail, no record found for that email'});
+                return;
+            }
+            _.each(output,function(user){
+                //console.log(user)
+                if(user.PostalCode == req.body.zip){
+                    //console.log('yes',user)
+                    res.json({status:'success',firstName:user.FirstName,lastName:user.LastName});
+                    return;
+                }
+            });
+            res.json({status:'fail, zip did not match'});
+            return;
+        });
+    
+});
+
 router.get('/logo', function(req, res) {
     //read from mongodb
     console.log("yep:"+req.query.id)
