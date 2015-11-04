@@ -170,6 +170,48 @@ router.get('/test', function(req, res) {
 
     
 });
+router.post('/checkBoxLogin', function(req, res) {
+    //read from mongodb
+    console.log(req.body)
+
+    //first, look for that email
+    infusionsoft.ContactService
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
+        .then(function(output){
+            console.log(output)
+            if(output.length==0){
+                res.json({status:'fail, no record found for that email'});
+                return;
+            }
+            _.each(output,function(IFuser){
+                console.log(IFuser)
+                if(IFuser.PostalCode == req.body.zip){
+                    console.log('yes',IFuser)
+                    
+                    //now, lets check the database for a user
+                    Boxes.find({'infusionsoftID':IFuser.Id},function(err, users) {
+                        if (err){
+                            res.json({ error: err });
+                        }else{
+                            if(users.length>0){
+                                //here is where we found a user
+                                res.json(users[0]);
+                                return;
+                            }else{
+                                //here we should make a user
+                                res.json({status:'no box found'});
+                                return;
+                            }
+                        }
+                    });
+                }else{
+                    res.json({status:'fail, zip does not match'});
+                    return;
+                }
+            });
+        });
+});
+
 
 router.post('/checkLogin', function(req, res) {
     //read from mongodb
@@ -489,3 +531,42 @@ app.listen(theport);
 console.log('http server will be listening on port %d', theport);
 console.log('CTRL+C to exit');
 
+/*
+[
+  {
+    "_id": "55d72e95c22f6803008c43bf",
+    "name": "scott mahr",
+    "goodStanding": true,
+    "email": "scottmahr@gmail.com",
+    "photoID": "55de3a7604594d03004a94c6",
+    "dropIns": [],
+    "cDate": "2015-08-21T13:58:45.554Z"
+  },
+  {
+    "_id": "55de3a6a04594d03004a94c5",
+    "name": "steve hogue",
+    "email": "steve@travelwodclub.com",
+    "goodStanding": true,
+    "photoID": "55de3a9204594d03004a94c8",
+    "dropIns": [],
+    "cDate": "2015-08-26T22:15:06.113Z"
+  },
+  {
+    "_id": "55d72e8cc22f6803008c43be",
+    "name": "kyle hogue",
+    "goodStanding": true,
+    "email": "kylehogue@gmail.com",
+    "photoID": "55de3af304594d03004a94ca",
+    "dropIns": [],
+    "cDate": "2015-08-21T13:58:36.003Z"
+  },
+  {
+    "_id": "55df39ba047b520300f0f7c9",
+    "name": "abby",
+    "email": "scottmahr@gmail.com",
+    "goodStanding": true,
+    "photoID": "55df3991047b520300f0f7bf",
+    "dropIns": [],
+    "cDate": "2015-08-27T16:24:26.118Z"
+  }
+]*/
