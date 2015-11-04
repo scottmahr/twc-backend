@@ -64,6 +64,7 @@ var userSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: {type: String, lowercase: true, trim: true,required:true,unique:true},                    
     facebookID: String,
+    infusionsoftID: Number,  //this is the infusionsoft ID
     photoID: String,
     dropIns: { type: mongoose.Schema.Types.Mixed , default: [] }, //[boxID,boxName,boxLogoID,dropinDate,verified]
     goodStanding:Boolean,
@@ -93,6 +94,7 @@ var boxSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: { type: String, trim: true,required:true,unique:true},   //name of event
     logoID: String,   //the id for the picture in gridfs
+    infusionsoftID: Number,  //this is the infusionsoft ID
     contactInfo: { type: mongoose.Schema.Types.Mixed , default: {} },    //object with all the contact info we need
     address: { type: mongoose.Schema.Types.Mixed , default: {} },    //object with address info
     email:{
@@ -151,32 +153,77 @@ router.get('/', function(req, res) {
 
 // ----------------------------------------------------
 
+
+router.get('/test', function(req, res) {
+    //read from mongodb
+    console.log(req.query)
+
+    
+      Users.find({'infusionsoftID':req.query.id},function(err, users) {
+            if (err){
+                res.json({ error: err });
+            }else{
+                console.log(users)
+                res.json(users);
+            }
+        });
+
+    
+});
+
 router.post('/checkLogin', function(req, res) {
     //read from mongodb
-    //console.log(req.body.email)
-    //console.log(req.body.zip)
+    console.log(req.body)
 
     //first, look for that email
     infusionsoft.ContactService
-        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','PostalCode'])
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
         .then(function(output){
-            //console.log(output)
+            console.log(output)
             if(output.length==0){
                 res.json({status:'fail, no record found for that email'});
                 return;
             }
-            _.each(output,function(user){
-                //console.log(user)
-                if(user.PostalCode == req.body.zip){
-                    //console.log('yes',user)
-                    res.json({status:'success',firstName:user.FirstName,lastName:user.LastName});
+            _.each(output,function(IFuser){
+                console.log(IFuser)
+                if(IFuser.PostalCode == req.body.zip){
+                    console.log('yes',IFuser)
+                    
+                    //now, lets check the database for a user
+                    Users.find({'infusionsoftID':IFuser.Id},function(err, users) {
+                        if (err){
+                            res.json({ error: err });
+                        }else{
+                            if(users.length>0){
+                                //here is where we found a user
+                                res.json(users[0]);
+                                return;
+                            }else{
+                                //here we should make a user
+                                var userData = {
+                                    name: IFuser.FirstName+' '+IFuser.LastName,                    
+                                    infusionsoftID: IFuser.Id,  //this is the infusionsoft ID
+                                    goodStanding:true,
+                                    email:IFuser.Email
+                                }
+                                new Users(userData).save(function(err,user) {
+                                    if(err){
+                                        res.json({ error: err });;
+                                    }else{
+                                        console.log('yes',user)
+                                        res.json(user);
+                                        return;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    res.json({status:'fail, zip does not match'});
                     return;
                 }
             });
-            res.json({status:'fail, zip did not match'});
-            return;
         });
-    
 });
 
 router.get('/logo', function(req, res) {
