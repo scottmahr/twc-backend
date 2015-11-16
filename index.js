@@ -213,7 +213,65 @@ router.post('/checkBoxLogin', function(req, res) {
 });
 
 
+var getCreateUser = function(res, IFuser,fbID){
+    if(!IFuser){return;}
+     //now, lets check the database for a user
+    Users.find({'infusionsoftID':IFuser.Id},function(err, users) {
+        if (err){
+            res.json({ error: err })
+            return;
+        }else{
+            if(users.length>0){
+                //here is where we found a user
+                console.log('return1',users[0])
+
+
+                //when we find this, we need to edit the user first to add the facbookID
+                var user = users[0];
+                console.log('facebookID',fbID)
+                if(fbID){
+                    user.facebookID = fbID;
+                    console.log('user',user)
+                    user.save(function(err,user) {
+                        if (err){
+                            console.log('error in saving facebookID')
+                        }else{
+                            console.log('saved facebookID')
+                        }
+                    });
+                }
+
+                console.log('return stuff now')
+                res.json(user);
+                return;
+            }else{
+                //here we should make a user
+                var userData = {
+                    name: IFuser.FirstName+' '+IFuser.LastName,                    
+                    infusionsoftID: IFuser.Id,  //this is the infusionsoft ID
+                    goodStanding:true,
+                    email:IFuser.Email
+                }
+                if(fbID){userData.facebookID = fbID;}
+                new Users(userData).save(function(err,user) {
+                    if(err){
+                        res.json({ error: err });
+                        return;
+                    }else{
+                        console.log('return2',user)
+                        res.json(user);
+                        return;
+                    }
+                });
+            }
+        }
+    });
+}
+
+
 router.post('/checkLogin', function(req, res) {
+    //looing for email, zip and fbID
+
     //read from mongodb
     console.log(req.body)
 
@@ -226,47 +284,56 @@ router.post('/checkLogin', function(req, res) {
                 res.json({status:'fail, no record found for that email'});
                 return;
             }
+            //first, if we only have one response, and we have a facebook ID, lets just return it
+            if(output.length==1 && !req.body.zip && req.body.fbID.length){
+                getCreateUser(res,output[0],req.body.fbID);
+                return;
+            }
+
+            //if that doesn't work, look through all the users and find the one with the right zip.
             _.each(output,function(IFuser){
                 console.log(IFuser)
                 if(IFuser.PostalCode == req.body.zip){
-                    console.log('yes',IFuser)
-                    
-                    //now, lets check the database for a user
-                    Users.find({'infusionsoftID':IFuser.Id},function(err, users) {
-                        if (err){
-                            res.json({ error: err });
-                        }else{
-                            if(users.length>0){
-                                //here is where we found a user
-                                res.json(users[0]);
-                                return;
-                            }else{
-                                //here we should make a user
-                                var userData = {
-                                    name: IFuser.FirstName+' '+IFuser.LastName,                    
-                                    infusionsoftID: IFuser.Id,  //this is the infusionsoft ID
-                                    goodStanding:true,
-                                    email:IFuser.Email
-                                }
-                                new Users(userData).save(function(err,user) {
-                                    if(err){
-                                        res.json({ error: err });;
-                                    }else{
-                                        console.log('yes',user)
-                                        res.json(user);
-                                        return;
-                                    }
-                                });
-                            }
-                        }
-                    });
+                    console.log('yes1',IFuser)
+                    getCreateUser(res,IFuser,req.body.fbID);
+                    console.log('sent stuff')
+                    return;
                 }else{
                     res.json({status:'fail, zip does not match'});
-                    return;
+                    //return;
                 }
             });
         });
 });
+
+
+router.post('/checkFB', function(req, res) {
+    //fbID
+    //read from mongodb
+    console.log(req.body)
+    Users.find({'facebookID':req.body.fbID},function(err, users) {
+        if (err){
+            res.json({ error: err })
+            return;
+        }else{
+            if(users.length>0){
+                //here is where we found a user
+                console.log('return1',users[0])
+                res.json(users[0]);
+                return;
+            }
+        }
+    });
+    
+});
+
+
+
+
+
+
+
+
 
 router.get('/logo', function(req, res) {
     //read from mongodb
