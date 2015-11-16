@@ -64,6 +64,7 @@ var userSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: {type: String, lowercase: true, trim: true,required:true,unique:true},                    
     facebookID: String,
+    photoURL: String,
     infusionsoftID: Number,  //this is the infusionsoft ID
     photoID: String,
     dropIns: { type: mongoose.Schema.Types.Mixed , default: [] }, //[boxID,boxName,boxLogoID,dropinDate,verified]
@@ -213,7 +214,7 @@ router.post('/checkBoxLogin', function(req, res) {
 });
 
 
-var getCreateUser = function(res, IFuser,fbID){
+var getCreateUser = function(res, IFuser,fbID, fbURL){
     if(!IFuser){return;}
      //now, lets check the database for a user
     Users.find({'infusionsoftID':IFuser.Id},function(err, users) {
@@ -231,6 +232,7 @@ var getCreateUser = function(res, IFuser,fbID){
                 console.log('facebookID',fbID)
                 if(fbID){
                     user.facebookID = fbID;
+                    user.photoURL = fbURL;
                     console.log('user',user)
                     user.save(function(err,user) {
                         if (err){
@@ -252,7 +254,10 @@ var getCreateUser = function(res, IFuser,fbID){
                     goodStanding:true,
                     email:IFuser.Email
                 }
-                if(fbID){userData.facebookID = fbID;}
+                if(fbID){
+                    userData.facebookID = fbID;
+                    userData.photoURL = fbURL;
+                }
                 new Users(userData).save(function(err,user) {
                     if(err){
                         res.json({ error: err });
@@ -286,7 +291,7 @@ router.post('/checkLogin', function(req, res) {
             }
             //first, if we only have one response, and we have a facebook ID, lets just return it
             if(output.length==1 && !req.body.zip && req.body.fbID.length){
-                getCreateUser(res,output[0],req.body.fbID);
+                getCreateUser(res,output[0],req.body.fbID,req.body.fbURL);
                 return;
             }
 
@@ -295,7 +300,7 @@ router.post('/checkLogin', function(req, res) {
                 console.log(IFuser)
                 if(IFuser.PostalCode == req.body.zip){
                     console.log('yes1',IFuser)
-                    getCreateUser(res,IFuser,req.body.fbID);
+                    getCreateUser(res,IFuser,req.body.fbID,req.body.fbURL);
                     console.log('sent stuff')
                     return;
                 }else{
@@ -321,6 +326,10 @@ router.post('/checkFB', function(req, res) {
                 console.log('return1',users[0])
                 res.json(users[0]);
                 return;
+            }else{
+                res.json({'error':'no user found'});
+                return;
+
             }
         }
     });
