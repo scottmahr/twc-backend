@@ -274,41 +274,69 @@ var getCreateUser = function(res, IFuser,fbID, fbURL){
 }
 
 
+var checkInfusionsoft = function(req,res){
+    infusionsoft.ContactService
+    .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
+    .then(function(output){
+        console.log(output)
+        if(output.length==0){
+            res.json({status:'fail, no record found for that email'});
+            return;
+        }
+        //first, if we only have one response, and we have a facebook ID, lets just return it
+        if(output.length==1 && !req.body.zip && req.body.fbID.length){
+            getCreateUser(res,output[0],req.body.fbID,req.body.fbURL);
+            return;
+        }
+
+        //if that doesn't work, look through all the users and find the one with the right zip.
+        _.each(output,function(IFuser){
+            console.log(IFuser)
+            if(IFuser.PostalCode == req.body.zip){
+                console.log('yes1',IFuser)
+                getCreateUser(res,IFuser,req.body.fbID,req.body.fbURL);
+                console.log('sent stuff')
+                return;
+            }else{
+                res.json({status:'fail, zip does not match'});
+                //return;
+            }
+        });
+    });
+
+
+}
+
+
 router.post('/checkLogin', function(req, res) {
     //looing for email, zip and fbID
 
-    //read from mongodb
-    console.log(req.body)
-
-    //first, look for that email
-    infusionsoft.ContactService
-        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
-        .then(function(output){
-            console.log(output)
-            if(output.length==0){
-                res.json({status:'fail, no record found for that email'});
+    //so if we get a facebookID, just look for that first, no need to do anything
+    if(req.body.fbID){
+        Users.find({'facebookID':req.body.fbID},function(err, users) {
+            if (err){
+                res.json({ error: err })
                 return;
-            }
-            //first, if we only have one response, and we have a facebook ID, lets just return it
-            if(output.length==1 && !req.body.zip && req.body.fbID.length){
-                getCreateUser(res,output[0],req.body.fbID,req.body.fbURL);
-                return;
-            }
-
-            //if that doesn't work, look through all the users and find the one with the right zip.
-            _.each(output,function(IFuser){
-                console.log(IFuser)
-                if(IFuser.PostalCode == req.body.zip){
-                    console.log('yes1',IFuser)
-                    getCreateUser(res,IFuser,req.body.fbID,req.body.fbURL);
-                    console.log('sent stuff')
+            }else{
+                if(users.length>0){
+                    //here is where we found a user
+                    console.log('return1',users[0])
+                    res.json(users[0]);
                     return;
                 }else{
-                    res.json({status:'fail, zip does not match'});
-                    //return;
+                    checkInfusionsoft(req,res);
                 }
-            });
+            }
         });
+    }else if(req.body.email && (req.body.fbID || req.body.zip)){
+        checkInfusionsoft(req,res);
+    }
+
+
+
+
+
+
 });
 
 
