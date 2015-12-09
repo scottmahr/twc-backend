@@ -1,0 +1,56 @@
+<div layout="row" flex id="content">
+
+    <md-content layout="column" flex="70" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Boxes</h1>
+        </md-toolbar>
+        <md-card-content style="height:1000px;overflow-y:scroll;">
+          <md-subheader >We have this many boxes: {{s.boxes.length}}</md-subheader>
+          <md-list-item ng-repeat="box in s.boxes | orderBy:'name' ">
+            <md-checkbox ng-change="boxChecked(box._id)" ng-model="box.checked"></md-checkbox>
+            <p>{{box.name}}</p><br>
+            
+            <img style="max-width: 300px;" ng-show="!!box.logoID" ng-src="http://travelwodclub.herokuapp.com/api/logo?id={{box.logoID}}">  
+           <!-- <img style="max-width: 300px;" ng-show="!!box.logoID" ng-src="http://localhost:5000/api/logo?id={{box.logoID}}">-->
+            <md-icon ng-show="!box.logoID" class="md-secondary icon-plus" aria-label="edit" ng-click="uploadPicture($event,box._id)"></md-icon>
+          </md-list-item>
+        </md-card-content>
+      </md-card>
+
+
+
+
+
+
+
+        
+    </md-content>
+
+
+
+
+
+
+
+
+    <md-content layout="column" flex="30" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeader"  >
+                <h1 class="md-toolbar-tools">NOTES</h1>
+        </md-toolbar>
+        <md-card-content>
+          <p class="notes">
+            This is where we will add logos for boxes<br><br>
+            
+
+            </p>
+          
+        </md-card-content>
+      </md-card>
+
+        
+    </md-content>
+</div>

@@ -1,0 +1,58 @@
+<div layout="row" flex id="content">
+
+    <md-content layout="column" flex="100" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Lifts</h1>
+        </md-toolbar>
+        <md-card-content >
+            <md-subheader >We have this many lifts: {{s.lifts.length}}</md-subheader>
+            <md-button ng-click="testAll()" class="md-raised md-primary">Test All</md-button>
+            <div  style="height:300px;overflow-y:scroll;">   
+                <md-list-item ng-repeat="lift in s.lifts | orderBy:'-cTime' ">
+                    <md-checkbox ng-change="liftChecked(lift._id)" ng-model="lift.checked"></md-checkbox>
+                    <p>{{lift.cTime|dt}}({{lift.liftName}} at {{lift.weight}}lbs) - {{lift.notes}}</p>
+                    
+                    <span class="md-secondary">
+                    
+                    <md-icon ng-class="lift.liftTraining ? 'icon-add' : 'icon-times-circle-o'" aria-label="edit" ></md-icon>&nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <md-icon ng-class="checkLift(lift) ? 'icon-like-filled' : 'icon-dislike'" aria-label="edit" ></md-icon>
+                    </span>
+
+                </md-list-item>
+            </div>
+        </md-card-content>
+      </md-card>
+        
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Lift Data</h1>
+        </md-toolbar>
+        <md-card-content >
+            <md-subheader ><p>{{s.lift().cTime|dt}}({{s.lift().liftName}} at {{s.lift().weight}}lbs) - {{s.lift().notes}}</p></md-subheader>
+            <div id="linePlot" plotidx="3"  lineplot></div>
+            
+
+            <md-button ng-click="setAsGood()" class="md-raised md-primary">Good</md-button>
+            <md-button ng-click="setAsBad()" class="md-raised md-warn">Fail</md-button>
+            <md-button ng-click="setAsOmit()" class="md-raised md-warn">Omit From Testing</md-button>
+            <md-subheader ><p>Trainer:{{s.lift().liftTraining}}({{s.lift().confirmedMetrics}} </p></md-subheader>
+        </md-card-content>
+      </md-card>
+
+
+
+    </md-content>
+
+
+
+
+
+
+
+
+    
+</div>

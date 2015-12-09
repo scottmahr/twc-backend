@@ -1,0 +1,99 @@
+<div layout="row" flex id="content">
+
+    <md-content layout="column" flex="100" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">COMPOSER</h1>
+        </md-toolbar>
+        <md-card-content>
+          <div id="dataCanvas" datacanvas></div>
+
+          <md-switch class="md-primary" md-no-ink aria-label="Record" ng-model="m.record">
+            Record Video
+          </md-switch>
+          <md-switch class="md-primary" md-no-ink aria-label="SloMo" ng-model="m.sloMo">
+            Slow Mo
+          </md-switch>
+          <md-button ng-click="pickLift()" class="md-raised md-primary">Pick Lift</md-button>
+          <md-button ng-click="makeVideo()" class="md-raised md-primary">Make Video</md-button>
+          {{s.selectedLift}}
+          <p>{{s.lift().cTime|dt}}({{s.lift().liftName}} at {{s.lift().weight}}lbs) - {{s.lift().notes}}</p>
+
+          
+        </md-card-content>
+      </md-card>
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools headerDark">EDIT</h1>
+        </md-toolbar>
+        <md-card-content class="noPad">
+          <div class="internalHeader"><span class="headerTxt">PICTURE</span></div>
+          <img class="videoMock" src="img/clipMock.PNG">
+          <div class="internalHeader"><span class="headerTxt">DATA</span></div>
+          <img class="videoMock" src="img/dataMock.PNG">
+          <div class="internalHeader"><span class="headerTxt">DISPLAY</span></div>
+          <img class="videoMock" src="img/displayMock.PNG">
+
+        </md-card-content>
+      </md-card>
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">VIDEO PREVIEW</h1>
+        </md-toolbar>
+        <md-card-content class="noPad">
+          <video id="awesome" width="1080"  controls=""  loop="" ng-src={{m.videoURL|trusted}} type="video/webm"></video>
+
+        </md-card-content>
+      </md-card>
+
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">POST</h1>
+        </md-toolbar>
+        <md-card-content class="noPad">
+          <div class="internalHeaderBig"><span class="headerTxtBig">POST DESCRIPTION</span></div>
+          <img class="videoMock" src="img/descriptionMock.PNG">
+          
+        </md-card-content>
+      </md-card>
+
+        
+    </md-content>
+
+
+
+
+
+
+<!--
+
+    <md-content layout="column" flex="30" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeader"  >
+                <h1 class="md-toolbar-tools">INSTRUCTIONS/NOTES</h1>
+        </md-toolbar>
+        <md-card-content>
+          <p class="notes">
+            Drag and drop a video clip into the picture edit window.<br><br>
+            Drag and drop a lift into the data edit window.<br><br>
+            Select the video clip. Drag either the head or tail of the clip to create the desiredin point, out point, and duration for the clip.<br><br>
+            Sych is currently acheived by eye?<br><br>
+            The view slider makes the clip larger or smaller to fine tune the edit points.<br><br>
+            Clicking in the display buttons selects information you wish to display.<br><br>
+            Complete the information you wish to display with the final video clip within the post section.<br><br>
+            Click the appropriate post button.
+
+            </p>
+          
+        </md-card-content>
+      </md-card>
+
+        
+    </md-content>
+    -->
+</div>

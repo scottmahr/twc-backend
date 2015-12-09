@@ -1,0 +1,22 @@
+<md-dialog aria-label="Upload an Image"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Upload an Image</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon class="icon-times" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="width:630px">
+
+      <div class="md-dialog-content" >
+        Frist:<input type="file" id="file" name="file"/><br>
+        <md-button class="md-raised md-primary" ng-click="add()">Upload</md-button>
+      </div>
+
+
+    </md-dialog-content>
+  </form>
+</md-dialog>

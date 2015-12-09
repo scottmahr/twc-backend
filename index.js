@@ -10,6 +10,7 @@ var Grid = require('gridfs-stream');
 var app = express();
 var fs = require('fs');
 var api = require('infusionsoft-api');
+var base64 = require('base64-stream');
 
 
 app.use(cors());
@@ -366,7 +367,7 @@ router.post('/checkFB', function(req, res) {
 
 
 
-
+//566863f85f5086141cc519cf
 
 
 
@@ -476,6 +477,7 @@ router.route('/users/:user_id')
             }
         });
     })
+
 
 
 // on routes that end in /dropins
@@ -622,6 +624,68 @@ router.route('/boxes/:box_id')
             }
         });
     })
+/*
+    .post(function(req, res) {
+        if( req==undefined){
+            res.json({ status: 'No Image' });
+        }else{
+            //console.log(req)
+            var writestream = gfs.createWriteStream({});
+            req.pipe(writestream);
+            writestream.on('close', function (file) {
+                // do something with `file`
+                console.log('Written To gridfs:'+file._id);
+                Boxes.findById(req.params.box_id, function(err, box) {
+                    if (err){
+                        res.json({ error: err });
+                    }
+                    _.extend(box,{logoID:file._id}).save(function(err,box) {
+                        if (err){
+                            res.json({ error: err });
+                        }else{
+                            res.json(box);
+                        }
+                    });
+
+                });
+
+                
+                //res.json({ status: 'Saved',id:file._id });
+            });
+        }
+    });
+
+*/
+    .post(function(req, res) {
+        if( req==undefined){
+            res.json({ status: 'No Image' });
+        }else{
+            var writestream = gfs.createWriteStream({});
+    
+            var decoder = base64.decode();
+
+            req.pipe(decoder).pipe(writestream);
+            writestream.on('close', function (file) {
+                // do something with `file`
+                console.log('Written To gridfs:'+file._id);
+                Boxes.findById(req.params.box_id, function(err, box) {
+                    if (err){
+                        res.json({ error: err });
+                    }
+                    _.extend(box,{logoID:file._id}).save(function(err,box) {
+                        if (err){
+                            res.json({ error: err });
+                        }else{
+                            res.json(box);
+                        }
+                    });
+
+                });
+            });
+        }
+    });
+
+
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);

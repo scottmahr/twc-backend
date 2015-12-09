@@ -1,0 +1,170 @@
+.md-toolbar-tools h1 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: inherit;
+}
+
+.addFAB{
+  position: fixed;
+    bottom: 15px;
+    right: 15px;
+
+}
+
+.addFAB2{
+  position: absolute;
+    bottom: 35px;
+    right: 35px;
+
+}
+
+.ccashplot{
+  width:900px;
+  height:300px;
+}
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+
+
+#content{
+  height:1400px;
+}
+
+
+.logo{
+      width: 100%;
+    padding: 15px;
+}
+#sideNav{
+      width: 144px;
+    min-width: 144px;
+    height: 1400px;
+}
+
+.sideBar{
+  background-color: #344051;
+  height:100%;
+}
+.sideTxtHeader{
+  color: #a0aabd;
+  font-size: 12px;
+  margin: 5px;
+
+}
+.sideTxt{
+  color: #a0aabd;
+  font-weight: bold;
+  margin: 5px;
+  cursor:pointer;
+}
+
+
+
+html{
+  height:100%;
+}
+
+body{
+  height:100%;
+}
+
+.row{
+  height:100%;
+}
+
+.myContainer{
+  background-color: #ecf2f6;
+}
+
+.videoMock{
+  width: 100%;
+}
+
+.myHeader{
+  background-color: #6f7d94;
+}
+
+.myHeaderLight{
+  background-color: #ecf2f6;
+}
+
+.headerDark{
+  color:#6f7d94;
+  font-weight: bold;
+
+}
+
+.notes{
+  color: #6f7d94;
+}
+
+.internalHeader{
+  height:20px;
+  background-color: #6f7d94;
+  width: 100%;
+}
+
+.headerTxt{
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  margin-left: 10px;
+}
+
+
+.noPad{
+  padding:0;
+}
+
+.internalHeaderBig{
+  height:40px;
+  background-color: #6f7d94;
+  width: 100%;
+}
+
+.headerTxtBig{
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 40px;
+  margin-left: 20px;
+}
+
+#dataCanvas{
+  height:608px;
+  width: 750px;
+}
+
+.selectBox{
+  width: 300px;
+  height: 500px;
+  float: left;
+  overflow: scroll;
+
+}
+
+
+.linePlot{
+  width: 1000px;
+  height: 500px;
+}
+
+.icon-like-filled{
+  color: green;
+}
+.icon-dislike{
+  color:red;
+}

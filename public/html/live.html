@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>FormLifting Live</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache" /> 
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+    <meta name="generator" content="HAPedit 3.1">
+
+
+	<link href="css/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+
+	
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/jquery-ui-1.10.4.custom.js"></script>
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.navigate.min.js"></script>
+    <script src="js/jquery.flot.fillbetween.min.js"></script>
+    <script src="js/formlifting.js" type="text/javascript"></script>
+
+  <style>
+  #feedback { font-size: .7em; }
+  #liftList .ui-selecting { background: #FECA40; }
+  #liftList .ui-selected { background: #F39814; color: white; }
+  #liftList { list-style-type: none; margin: 0; padding: 0; width: 150px; }
+  #liftList li { margin: 3px; padding: 0.4em; font-size: .8em; height: 45px; }
+  </style>
+  
+</head>
+<body>
+
+    <div style="float:left; width:380px"> 
+    LiftID:&nbsp;&nbsp;<span id="liftIDtxt"></span><br/>
+    Name:&nbsp;&nbsp;<span id="liftNametxt"></span><br/>
+    Weight:&nbsp;&nbsp;<span id="liftWeighttxt"></span><br/>
+    Lifter:&nbsp;&nbsp;<span id="liftLiftertxt"></span><br/>
+    
+    </div>
+
+    <h1 style="float:left">Form Lifting Live</h1>
+    
+<div style="float:left">
+        <h2 style="text-align: center;">Single Lift</h2>
+        <div id="liftPlot"  style="width:1000px;height:500px;"></div>
+        <span id="hoverdata"></span>
+        <span id="clickdata"></span>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="plotBtns" id="setBaseline" value="Set Baseline">
+            <input type="submit" class="plotBtns" id="setStart" value="Set Start">
+            <select class="plotBtns" id="phaseIdx">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <input type="submit" class="plotBtns" id="startAvg" value="Start Avg">
+            <input type="submit" class="plotBtns" id="endAvg" value="End Avg">
+            <input type="submit" class="plotBtns" id="splitLift" value="Split">
+            <input type="submit" class="plotBtns" id="saveMetrics" value="Save to Server">
+            <input type="checkbox" class="plotBtns" id="useGAE" checked>
+            <input type="text" class="plotBtns" id="avgCount" value="1">
+        </span>
+        <span id="avgSumData"></span>
+    </div>
+    <div style="float:left">
+        <h2 style="text-align: center;">Many Lifts</h2>
+        <div id="plot1"  style="width:500px;height:300px;"></div>
+    </div>
+   
+   <div id="tabs" style="float:left;width:500px;height:300px;">
+      <ul>
+        
+      </ul>
+
+    </div>
+
+</body>
+
+</html>

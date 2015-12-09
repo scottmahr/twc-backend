@@ -1,0 +1,430 @@
+<html>
+<head>
+    <title>FormLifting Data</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache" /> 
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <meta name="generator" content="HAPedit 3.1"/>
+    <meta name="robots" content="noindex"/>
+
+    
+	<link href="css/jquery-ui-1.10.4.custom.css" rel="stylesheet"/>
+    <link href="css/icons.css" rel="stylesheet"  />
+    <link href="css/liftsPage.css" rel="stylesheet"/>
+    <link href="css/jquery.fullPage.css" rel="stylesheet" type="text/css"  />
+    <link href="http://www.nivedya-staging.com/formlifting/Override.css" rel="stylesheet" type="text/css"  />
+
+
+    
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/libs/underscore-min.js"></script>
+    <script src="js/libs/backbone-min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    
+    <script src="js/libs/clndr.min.js"></script>
+    <script src="js/libs/jquery.fullPage.min.js"></script>
+    <script src="js/libs/jquery.corner.js"></script>
+
+  
+    
+    <!--
+    <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
+    <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
+    <script src="//vjs.zencdn.net/4.5/video.js"></script>
+	-->
+    
+    
+    <script>
+        var urlSessionID = "{{ urlSessionID }}";
+
+    </script>
+    
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/libs/jquery-ui-1.10.4.custom.js"></script>
+    <script src="js/libs/jquery.flot.min.js"></script>
+    <script src="js/libs/flot/jquery.flot.navigate.min.js"></script>
+    <script src="js/libs/flot/jquery.flot.fillbetween.min.js"></script>
+    <script src="js/libs/flot/jquery.flot.symbol.js"></script>
+    <script src="js/libs/flot/jquery.flot.axislabels.js"></script>
+    <script src="js/libs/flot/jquery.flot.time.min.js"></script>
+    <script src="js/libs/flot/jquery.flot.resize.min.js"></script>
+    <script src="js/libs/flot/jquery.flot.selection.min.js"></script>
+    <script src="js/libs/ZeroClipboard.min.js" type="text/javascript"></script>
+    
+    <script src="js/formGlobals.js" type="text/javascript"></script>
+    <script src="js/formObjects.js" type="text/javascript"></script>
+    <script src="js/formHelpers.js" type="text/javascript"></script>
+    <script src="js/formAnalysis.js" type="text/javascript"></script>
+    
+    
+    
+    <script src="js/formAjax.js" type="text/javascript"></script>
+    <script src="js/formPlots.js" type="text/javascript"></script>
+    <script src="js/views/LifterCards.js" type="text/javascript"></script>
+    <script src="js/views/CalendarPage.js" type="text/javascript"></script>
+    <script src="js/views/FormDialogs.js" type="text/javascript"></script>
+    <script src="js/formFacebook.js" type="text/javascript"></script>
+    <script src="js/formlifting.js" type="text/javascript"></script>
+    
+    
+
+  
+</head>
+<body>
+    <div id="fullpage">
+    <!--First, select the lifter-->
+        <div id="lifterSection" class="section active">   
+                <h1 id="welcomeMsg"></h1>
+                <div id="lifterDiv"></div>
+                <div id="friendSearchDiv"><input type="text" class="friendSearch" 
+                    onfocus="if (this.value=='Search') this.value = ''" id="friendSearch" value="Search">
+                </div>
+                <div id="friendDiv"></div>
+        </div>
+
+        <div id="calendarSection" class="section">    
+            <div id="mini-clndr"></div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="addSessionIcon" class="icon-social-addthis myIcon" title="Add session"></span>
+            <span id="allSessionsIcon" class="icon-three-points myIcon" title="Show all sessions for current month"></span>
+            <span id="multiSessionsIcon" class="icon-plus myIcon" title="Allows selection of multiple sessions"  ></span>
+            <span id="addPRIcon" class="icon-star myIcon" title="Enter a personal record"></span>
+            <span id="showPRsIcon" class="icon-graphs myIcon" title="Show all personal records"></span>
+        </div>
+        
+        <!--Then, the information plots-->
+        <div id="metricsSection" class="section"> 
+            <div id="forceCurveSection" class="slide"> 
+                <div id = "forceCurveDiv">
+                    <h2>Force Curves</h2>
+                    <div id="forceCurvePlot"></div> 
+                    <div id="forceCurveIcons" style="vertical-align: middle;">
+                        <span id="forceCurvePlotHomeIcon" class=" icon-expand-directions myIcon" title="Zooms to original size"  ></span>
+                        <span id="forceCurveZoomWindowIcon" class="icon-search myIcon" title="Enables zoom to window"></span>
+                        <span id="forceCurvePlotPanIcon" class="icon-animal-footprint myIcon" title="Enables panning"></span>
+                        &nbsp;&nbsp;&nbsp;
+                        
+                        
+                        <span id="forceCurveMetricDiv"></span>
+                        <span id="forceCurveKeyMetricsIcon" class="icon-key myIcon" title="Select key metrics to display"></span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span id="forceCurveFCDiv"></span>
+                        <span id="addforceCurveIcon" class="icon-social-addthis myIcon" title="Add force curve"></span>
+
+                    </div>
+                </div>
+            </div>
+            <!--Then, the session metrics-->
+            <div class="slide active">
+                <div id = "metricsDiv">
+                    <h2>Session Metrics</h2>
+                    <div id="sessionTxt1"></div>
+                    <div id="sessionTxt2"></div>
+                    <div id="sessionPlot"></div> 
+                    <div id="sessionIcons" style="vertical-align: middle;">
+                        <span id="sessionIcon1" class=" icon-number-one myIcon" title="Select first session"></span>
+                        <span id="sessionIcon2" class=" icon-number-two myIcon" title="Select second session"></span>
+                        <span id="sessionIcon3" class=" icon-number-three myIcon" title="Select third session"></span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span id="trimStartIcon" class="icon-arrow-right-thin myIcon" title="Hides lift from start of session"  ></span>
+                        <span id="noTrimIcon" class="icon-left-right myIcon" title="Shows all lifts"  ></span>
+                        <span id="trimEndIcon" class="icon-arrow-left-thin myIcon" title="Hides lift from end of session"  ></span>        
+                        &nbsp;&nbsp;&nbsp;
+                        <span id="sesPlotHomeIcon" class=" icon-expand-directions myIcon" title="Zooms to original size"  ></span>
+                        <span id="sesZoomWindowIcon" class="icon-search myIcon" title="Enables zoom to window"></span>
+                        <span id="sesPlotPanIcon" class="icon-animal-footprint myIcon" title="Enables panning"></span>
+                        <span id="sesGetTimeIcon" class="icon-clock myIcon" title="Find time between clicks"></span>
+                        &nbsp;&nbsp;
+                        <span id="multiLiftsIcon" class="icon-plus myIcon" title="Allows selection of multiple lifts"  ></span>
+                        <span id="allLiftsIcon" class="icon-layers myIcon" title="Selects all lifts"  ></span>
+                        &nbsp;&nbsp;
+                        <span id="sesLinkIcon" class="icon-link-url myIcon" title="Copies link to this session to your clipboard"></span>
+                        <span id="sesDownloadIcon" class="icon-download myIcon" title="Downlaod session info in a csv file"></span>
+                         &nbsp;&nbsp;
+                        
+                        <span id="editSessionIcon" class="icon-officine myIcon" title="Edit session"></span>
+                        <span id="deleteSessionIcon" class="icon-fire myIcon" title="Delete session"></span>
+
+                        <span id="sesMetricDiv"></span>
+                        <span id="sesKeyMetricsIcon" class="icon-key myIcon" title="Select key metrics to display"></span>
+                        <span id="analyzeAllLifts" class="icon-hdd-raid myIcon" title="Analyze all lifts"></span>
+
+                    </div>
+                </div>
+            </div>
+            <div id="infoSection" class="slide"> 
+                <div id = "infoDiv">
+                    <h2>Personal Records</h2>
+                    <div id="infoPlot"></div> 
+                    <div id="infoIcons" style="vertical-align: middle;">
+                        <span id="infoPlotHomeIcon" class=" icon-expand-directions myIcon" title="Zooms to original size"  ></span>
+                        <span id="infoZoomWindowIcon" class="icon-search myIcon" title="Enables zoom to window"></span>
+                        <span id="infoPlotPanIcon" class="icon-animal-footprint myIcon" title="Enables panning"></span>
+                    </div>
+                </div>
+            </div>
+            
+
+        </div>    
+        
+        
+        
+        <!--Next, the lift plot-->
+        <div id="liftPlotSection" class="section">
+            <div id="liftPlotDiv" >
+                <h2>Single Lift</h2>
+                <div id="liftTxt" ></div>
+                <div id="plotContainer">
+                    <div id="liftPlotPhases"></div>
+                    <div id="liftPlot"></div>
+                    <div id="liftIconsDiv">
+                        <span id="liftPlotHomeIcon" class=" icon-expand-directions myIcon" title="Zooms to original size"  ></span>
+                        <span id="liftZoomWindowIcon" class="icon-search myIcon" title="Enables zoom to window"></span>
+                        <span id="liftPlotPanIcon" class="icon-animal-footprint myIcon" title="Enables panning"></span>
+                        <span id="liftGetTimeIcon" class="icon-clock myIcon" title="Find time between clicks"></span>
+                         &nbsp;&nbsp;
+                        <span id="splitLiftIcon" class="icon-copy-document myIcon" title="Split lift"></span>
+                        <span id="editLiftIcon" class="icon-officine myIcon" title="Edit lift"></span>
+                        <span id="deleteLiftIcon" class="icon-fire myIcon" title="Delete lift"></span>
+                        <span id="liftLinkIcon" class="icon-link-url myIcon" title="Copies link to this lift to your clipboard"></span>
+
+                        <span id="lastLiftIcon" class="icon-arrow-left-bold myIcon" title="Moves to the last lift in the session"></span>
+                        <span id="nextLiftIcon" class="icon-arrow-right-bold myIcon" title="Moves to the next lift in the session"></span>
+
+                        <span id="analyzeIcon" class="icon-graphs myIcon" title="Analyzes current lift"></span>
+                        <span id="saveIcon" class="icon-hdd-raid myIcon" title="Saves metrics"></span>
+                    </div>
+                    <div id="liftMetricDiv"></div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+
+    <div id="calendarHover">my hovering calendar div</div>
+
+    <div id="notification">
+        <h1>notification</h1>
+    </div>
+    <div id="myHeader"> 
+        <div style="clear: both;"></div>
+        <!--<h1 style="float:left">Form Lifting Lift Data</h1>-->
+        <img id="userImage" src=""></img>
+        <div id="fbStatus"></div><br/>
+        
+        
+        <fb:login-button style="float:right" autologoutlink="true" scope="public_profile,email,user_friends" onlogin="checkLoginState();"></fb:login-button>
+    </div>
+
+
+    <!--TEMPLATES
+    //////////////////////////////////
+    //////////////////////////////////-->
+
+    <script id="calendar-template" type="text/template">
+        <div class="controls">
+            <div class="clndr-previous-button">&lsaquo;</div><div class="month"><%= month %></div><div class="clndr-next-button">&rsaquo;</div>
+        </div>
+        <div id="daysContainer" class="days-container" numofrows = "<%= numberOfRows %>">
+            <div class="days">
+                <div class="headers">
+                    <% _.each(daysOfTheWeek, function(day) { %><div class="day-header"><%= day %></div><% }); %>
+                </div>
+                <% _.each(days, function(day) {%><div class="<%= day.classes %>" id="<%= day.id %>">
+                <div class="dayLabel"><%= day.day %></div>
+                <% _.each(day.events, function(myevent,idx){ %>  
+                    <div class="calSession liftType<%= myevent.liftTypes.split(';')[0] %>" eventID=<%= myevent.sessionID %>> <%= liftTypeStrs[myevent.liftTypes.split(';')[0]] %>:<%= myevent.numLifts %> </div>  
+                    <% }); %> </div>
+                <% }); %>
+            </div>
+        </div>
+    </script>
+     
+
+    <script id="lifterCardTemplate" type="text/template">
+        <div class="lifterCard" lifterID="<%= lifter.get('lifterID') %>">
+            <img class="lifterCardImg" src="
+            <% if(lifter.get('facebookPic')=='na'){ %> http://www.cyberpsychology.eu/storage/strano2.jpg 
+                <% }else{ %>   <%= lifter.get('facebookPic') %> <% } %> "></img>
+            <h2>&nbsp;&nbsp;<%= lifter.get('name') %></h2>
+            <h4>&nbsp;&nbsp;Number of Lifts:&nbsp;<%= lifter.get('numberOfLifts') %></h2>
+        </div>
+    </script> 
+
+    <script id="sesHoverTemplate" type="text/template">
+        <b>Session Name:</b> <%= session.sessionName %><br/>
+        <b>Session ID:</b> <%= session.sessionID %><br/>
+        <b>Lifter Name:</b> <%= getLocalLifter(session.lifterID).get('name') %><br/>
+        <b>Lift Type:</b> <%= liftTypes[session.liftTypes.split(';')[0]] %><br/>
+        <b>Num Of Lifts:</b> <%= session.numLifts %><br/>
+    </script> 
+
+    <script id="sesTimeTemplate" type="text/template">
+        <b>Start Time:</b> <%= t[0] %>s<br/>
+        <b>End Time:</b> <%= t[1] %>s<br/>
+        <b>Time Elasped:</b> <% if(t[1]!=0){ %> 
+        <%= parseInt((t[1]-t[0])/60) %>m&nbsp;&nbsp;<%= Math.round(((t[1]-t[0])%60) * 100) / 100 %>s
+        <% } %>
+    </script> 
+
+    <script id="sessionTxt1Template" type="text/template">
+        <b>Session Name:</b> <%= session.sessionName %>&nbsp;&nbsp;
+        <b>Session ID:</b> <%= session.sessionID %>&nbsp;&nbsp;
+        <b>Lifter Name:</b> <%= getLocalLifter(session.lifterID).get('name') %>&nbsp;&nbsp;
+        <b>Lift Type:</b> <%= liftTypes[session.liftTypes.split(';')[0]] %>&nbsp;&nbsp;
+        <b>Num Of Lifts:</b> <%= session.numLifts %>&nbsp;&nbsp;
+    </script>
+
+    <script id="sessionTxt2Template" type="text/template">
+        <%= session.notes %>
+    </script>
+
+    <script id="sessionOptTemplate" type="text/template">
+        <option value="<%= session.sessionID %>">
+                    <%= session.sessionName %> - <%= getLocalLifter(session.lifterID).get('name') %> - 
+                    <%= (d.getMonth() + 1)+"/"+d.getDate() %></option>
+    </script>
+    
+    <script id="liftTxtTemplate" type="text/template">
+        <h3>Lift #<%= liftIdx %></h3>
+        <b>Lift Name:</b> <%= lift.liftName %>&nbsp;&nbsp;
+        <b>Lift ID:</b> <%= lift.liftID %>&nbsp;&nbsp;<br/>
+        <b>Lifter Name:</b> <%= getLocalLifterName(lift.lifterID) %>&nbsp;&nbsp;
+        <b>Lift Type:</b> <%= liftTypes[lift.liftType] %>&nbsp;&nbsp;<br/>
+        <b>Weight:</b> <%= lift.weight %>&nbsp;&nbsp;
+        <b>Score:</b> <%= lift.score %>&nbsp;&nbsp;<br/>
+        <b>Hardware:</b> <%= lift.hardwareVer %>&nbsp;&nbsp;
+        <b>sessionID:</b> <%= lift.sessionID %>&nbsp;&nbsp;<br/>
+        <b>Notes:</b> <%= lift.notes %>&nbsp;&nbsp;<br/>
+        <% _.each(lift.keyMetrics, function(metric){ %>  
+             <%= metric[1] %>, <%= metric[2] %>,<%= metric[3] %>,<%= metric[4] %>,<%= metric[5] %>,
+             <%= metric[6] %>,<%= metric[7] %> <br/>        
+        <% }); %>
+        <b>Metrics</b><br/>
+        <% var count=0;_.each(lift.metrics, function(v,k){ %>  
+             <%= k %>: <%= v %>&nbsp;&nbsp; <% if(count++%3==2){ %><br/> <% } %>       
+        <% }); %><br/>
+                
+
+    </script>
+
+    <script id="forceCurveTemplate" type="text/template">
+        <span class="forceCurve <% if(fc.displayed){ %> forceCurveClicked <% ;} %>" fcID="<%= fc.forceCurveID %>"><%= fc.name %>&nbsp;&nbsp;
+            <%= getLocalLifter(fc.lifterID).get('name') %>:
+            <%= moment(fc.dates[0]).format('YYYY-MM-DD') %>:<%= moment(fc.dates[1]).format('YYYY-MM-DD') %>
+        </span>
+    </script>
+
+    <script id="sesMetricTemplate" type="text/template">
+        <span class="metricBox <%= metric.metricID %>"><%= metric.name %>:<%= metric.average[sessionIdx] %></span>
+    </script>
+
+    <script id="liftMetricTemplate" type="text/template">
+        <span class="metricBox <%= metric.metricID %>"><%= metric.name %>:<%= metrics[metric.metricID] %> (<%= metric.average[sessionIdx] %>)</span>
+    </script>
+
+    <script id="metricSelectTemplate" type="text/template">
+        <span id="sel<%= metric.metricID %>" class="metricBox <% if(metric.displayed){ %> metricClicked <% ;} %>"
+           style="float:left;margin: 5px;cursor:pointer"><%= metric.name %>:<%= metric.average %>
+        </span>
+    </script>
+
+    <script id="phaseTemplate" type="text/template">
+        <span class="liftPhase" style="left:<%= left %>px;width:<%= width %>px"><%= phaseName %></span>
+    </script>
+
+    <!--DIALOGS
+    //////////////////////////////////
+    //////////////////////////////////-->
+    <div id="dialog-newSession" title="New Session">
+      <p>All form fields are required.</p>
+      <form>
+         <label for="sessionID">Session ID:</label>
+        <input type="text" name="sessionID" id="sessionIDDialog" class="text ui-widget-content ui-corner-all"><br/>
+        <label for="name">Session Name:</label>
+        <input type="text" name="name" id="nameDialog" class="text ui-widget-content ui-corner-all"><br/>
+        <label for="lifterID">LifterID:</label>
+        <select name="lifterID" class="lifterList" id="lifterIDDialog"></select><br/>
+        <label for="liftType">Lift Type:</label>
+        <select name="liftType" id="liftTypeDialog"  class="liftType"></select><br/>
+        <label for="notes">Notes:</label>
+        <input type="text" name="notes" id="notesDialog" value="" class="text ui-widget-content ui-corner-all"><br/>
+      </form>
+    </div>
+    
+    <div id="dialog-editlift" title="Edit Lift">
+      <p>All form fields are required.</p>
+      <form>
+        <label >Lift Name:</label>
+        <input type="text" id="editName" class="text ui-widget-content ui-corner-all"><br/>
+        <label >Weight:</label>
+        <input type="text" id="editWeight" class="text ui-widget-content ui-corner-all"><br/>
+        <label >LifterID:</label>
+        <select id="editlifterID" class="lifterList naok"></select><br/>
+        <label >Lift Type:</label>
+        <select  id="editliftType"  class="liftType"><option value="na">na</option></select><br/>
+        <label >Session:</label>
+        <select  id="editSessionID"><option value="na">na</option></select><br/>
+        <br/>
+      </form>
+    </div>
+
+    <div id="dialog-editSession" title="Edit Session">
+      <p>All form fields are required.</p>
+      <form>
+        <label >Session Name:</label>
+        <input type="text" id="editSesName" class="text ui-widget-content ui-corner-all"><br/>
+        <label >Notes:</label>
+        <input type="text" id="editSesNotes" class="text ui-widget-content ui-corner-all"><br/>
+        <label >LifterID:</label>
+        <select id="editSeslifterID" class="lifterList naok"></select><br/>
+      </form>
+    </div>
+
+    <div id="dialog-newPR" title="Enter PR">
+      <p>All form fields are required.</p>
+      <form>
+
+        <label >Lift Type:</label>
+        <select  id="newPRliftType" class="liftType"><option value="na">na</option></select><br/>
+        <label >PR Weight:</label>
+        <input type="text" id="newPRWeight" class="text ui-widget-content ui-corner-all"><br/>
+        <label >Date:</label>
+        <input type="text" id="newPRDate"><br/>
+        <label >Notes:</label>
+        <input type="text" id="newPRNotes" class="text ui-widget-content ui-corner-all"><br/>
+        <br/>
+      </form>
+    </div>
+
+    <div id="dialog-newForceCurve" title="New Force Curve">
+      <p>All form fields are required.</p>
+      <form>
+
+        <label for="lifterID">LifterID:</label>
+        <select name="lifterID" class="lifterList" id="newFCLifterID"></select><br/>
+        <label >Lift Type:</label>
+        <select  id="newFCliftType" class="liftType"><option value="na">na</option></select><br/>
+        <label >Name:</label>
+        <input type="text" id="newFCName" class="text ui-widget-content ui-corner-all"><br/>
+        <label >Start Date:</label>
+        <input type="text" id="newFCStartdate"><br/>
+        <label >End Date:</label>
+        <input type="text" id="newFCEnddate"><br/>
+        <label >Percentage of lifts to show:</label>
+        <input type="text" id="newFCLiftPer" class="text ui-widget-content ui-corner-all"><br/>
+        <br/>
+      </form>
+    </div>
+
+    <div id="dialog-keyMetrics" title="Select Key Metrics">
+      <p>Select which key metrics to see.</p>
+      <div id="keyMetricDisplay"></div>
+    </div>
+</body>
+
+    
+
+</html>
