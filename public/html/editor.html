@@ -12,7 +12,7 @@
             <md-checkbox ng-change="boxChecked(box._id)" ng-model="box.checked"></md-checkbox>
             <p>{{box.name}}</p><br>
             
-            <img style="max-width: 300px;" ng-show="!!box.logoID" ng-src="http://travelwodclub.herokuapp.com/api/logo?id={{box.logoID}}">  
+            <img style="max-width: 300px;" ng-show="!!box.logoID" ng-click="uploadPicture($event,box._id)" ng-src="http://travelwodclub.herokuapp.com/api/logo?id={{box.logoID}}">  
            <!-- <img style="max-width: 300px;" ng-show="!!box.logoID" ng-src="http://localhost:5000/api/logo?id={{box.logoID}}">-->
             <md-icon ng-show="!box.logoID" class="md-secondary icon-plus" aria-label="edit" ng-click="uploadPicture($event,box._id)"></md-icon>
           </md-list-item>
@@ -44,6 +44,10 @@
         <md-card-content>
           <p class="notes">
             This is where we will add logos for boxes<br><br>
+
+            Click on the plus sign for any box to add an image<br><br>
+
+            Note: Must be a PNG image<br><br>
             
 
             </p>
