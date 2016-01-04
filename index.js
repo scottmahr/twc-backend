@@ -208,7 +208,7 @@ router.get('/updateBoxes', function(req, res) {
         .like(Contact.Groups, '%125%')
         .select(_.pluck(fields,1))
         .orderByDescending('Id')
-        .take(500)
+        .take(5)
         .toArray()
         .done(function(result) {
             //let's put this into the right array
@@ -244,7 +244,7 @@ router.get('/updateBoxes', function(req, res) {
                 //console.log('at '+IFbox.infusionsoftID)
                 Boxes.findOne({'infusionsoftID':IFbox.infusionsoftID},function(err, box) {
                     if (err){
-                        results.push('error: '+IFbox.infusionsoftID)
+                        results.push('error1: '+IFbox.infusionsoftID)
                     }else{
                         if(box){
                             _.extend(box,IFbox).save(function(err,newBox) {
@@ -260,20 +260,40 @@ router.get('/updateBoxes', function(req, res) {
                             });
 
                         }else{
-                            //console.log(IFbox)
-                            new Boxes(IFbox).save(function(err,newBox) {
-                                if(err){
-                                    console.log('ERROR'+err)
-                                    results.push('ERROR box : '+err)
+                            //first, let's see if the box exists with another name
+                            Boxes.findOne({'name':IFbox.name},function(err, box) {
+                                if (err){
+                                    results.push('error2: '+IFbox.infusionsoftID)
                                 }else{
-                                    results.push('new box: '+IFbox.infusionsoftID)
-                                }
-                                if(results.length==boxes.length){
-                                    res.json(results);
-                                }
-                            });
-                            
+                                    if(box){
+                                        _.extend(box,IFbox).save(function(err,newBox) {
+                                            if (err){
+                                                console.log('ERROR'+err)
+                                                results.push('ERROR box : '+err)
+                                            }else{
+                                                results.push('updated box : '+box.infusionsoftID)
+                                            }
+                                            if(results.length==boxes.length){
+                                                res.json(results);
+                                            }
+                                        });
 
+                                    }else{
+                                        //console.log(IFbox)
+                                        new Boxes(IFbox).save(function(err,newBox) {
+                                            if(err){
+                                                console.log('ERROR'+err)
+                                                results.push('ERROR box : '+err)
+                                            }else{
+                                                results.push('new box: '+IFbox.infusionsoftID)
+                                            }
+                                            if(results.length==boxes.length){
+                                                res.json(results);
+                                            }
+                                        });
+                                    }
+                                }
+                            })
                         }
                     }
                     
