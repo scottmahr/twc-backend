@@ -208,7 +208,7 @@ router.get('/updateBoxes', function(req, res) {
         .like(Contact.Groups, '%125%')
         .select(_.pluck(fields,1))
         .orderByDescending('Id')
-        .take(5)
+        .take(500)
         .toArray()
         .done(function(result) {
             //let's put this into the right array
