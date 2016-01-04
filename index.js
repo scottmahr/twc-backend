@@ -149,6 +149,31 @@ app.use(express.static(__dirname + '/public'));
 
 
 
+var fields = [
+    ['name','Company'],
+    ['infusionsoftID','Id' ],
+    ['contactInfo.FirstName','FirstName' ],
+    ['contactInfo.LastName','LastName' ],
+    ['contactInfo.Phone1','Phone1' ],
+    ['address.street','StreetAddress1' ],
+    ['address.city','City' ],
+    ['address.state','State' ],
+    ['address.postalCode','PostalCode' ],
+    ['address.country','Country' ],
+    ['email','Email' ],
+    ['website','Website' ],
+    ['hours','_HoursofOperation' ],
+    ['dropInPolicy','_DropInPolicy' ],
+    ['dropInRate','_DropInRate',function(x){return parseFloat(x.replace(/[^\d.-]/g, ''));}  ],
+    ['dropInOffer','_DropInOffer0' ],
+    ['latitude','_Lat',function(x){return parseFloat(x)} ],
+    ['longitude','_Lng',function(x){return parseFloat(x)}  ],
+    ['waiverRequired','_AdvancedWaiverNeeded0',function(x){if(x=='No'){return false;}return true;} ],
+    ['yelpLink','_Yelp' ],
+];
+
+
+
 router.get('/', function(req, res) {
     res.json({ success: 'hooray! welcome to our api!' });   
 });
@@ -172,6 +197,108 @@ router.get('/test', function(req, res) {
 
     
 });
+
+
+router.get('/updateBoxes', function(req, res) {
+    //read from mongodb
+    console.log(req.query)
+
+    //this looks through all the IF boxes, and adds them to the data base 
+    infusionsoft.Contacts
+        .like(Contact.Groups, '%125%')
+        .select(_.pluck(fields,1))
+        .orderByDescending('Id')
+        .take(500)
+        .toArray()
+        .done(function(result) {
+            //let's put this into the right array
+            var boxes = _.map(result,function(contact){
+                var output = {};
+                _.forEach(fields,function(field){
+                    var f = field[2];
+                    if(!f){
+                        f = function(x){return x;}
+                    }
+                    if(_.has(contact,field[1])){
+                        if(field[0].indexOf('.')==-1){
+                            //means we just add it
+                            output[field[0]] = f(contact[field[1]]);
+                        }{
+                            //means we need to 
+                            var args =  field[0].split('.');
+                            if(!_.has(output,args[0])){
+                                output[args[0]] = {};
+                            }
+                            output[args[0]][args[1]] = f(contact[field[1]]);
+                        }
+                        
+                    }
+                });
+                return output;
+            });
+
+            //now that we have the boxes, we need to update the ones in memory
+            console.log('starting results')
+            var results = [];
+            _.forEach(boxes,function(IFbox){
+                //console.log('at '+IFbox.infusionsoftID)
+                Boxes.findOne({'infusionsoftID':IFbox.infusionsoftID},function(err, box) {
+                    if (err){
+                        results.push('error: '+IFbox.infusionsoftID)
+                    }else{
+                        if(box){
+                            _.extend(box,IFbox).save(function(err,newBox) {
+                                if (err){
+                                    console.log('ERROR'+err)
+                                    results.push('ERROR box : '+err)
+                                }else{
+                                    results.push('updated box : '+box.infusionsoftID)
+                                }
+                                if(results.length==boxes.length){
+                                    res.json(results);
+                                }
+                            });
+
+                        }else{
+                            //console.log(IFbox)
+                            new Boxes(IFbox).save(function(err,newBox) {
+                                if(err){
+                                    console.log('ERROR'+err)
+                                    results.push('ERROR box : '+err)
+                                }else{
+                                    results.push('new box: '+IFbox.infusionsoftID)
+                                }
+                                if(results.length==boxes.length){
+                                    res.json(results);
+                                }
+                            });
+                            
+
+                        }
+                    }
+                    
+
+                });
+
+            });
+
+                                
+/*
+
+
+
+
+*/
+            console.log('this many'+result.length)
+            //console.log(result);
+            //console.log(boxes)
+            
+            
+        });
+
+    
+});
+
 router.post('/checkBoxLogin', function(req, res) {
     //read from mongodb
     console.log(req.body)
