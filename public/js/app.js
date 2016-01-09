@@ -37,7 +37,7 @@ app.config(function($mdThemingProvider) {
   });
 
 
-app.run(function($rootScope, $interval,Boxes) {
+app.run(function($rootScope, $interval,Boxes,Users,DropIns) {
   console.log('app has started up')
 
   var heartBeat;

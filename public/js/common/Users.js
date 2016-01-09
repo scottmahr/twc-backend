@@ -11,8 +11,8 @@ app.factory('Users', ['$rootScope','Restangular', 'State','EditState' ,
     
     usersList.then(function(usersResult) {
         console.log("Got Users:"+usersResult.length)
+        //console.log(usersResult[2])
         State.users = usersResult;
-        State.loadUser();
     },function(error) {
         console.log("error"+error)
     } );

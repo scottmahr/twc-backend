@@ -140,7 +140,19 @@ app.factory('State', ['$state','$timeout','$http','Globals',
         }
     }
 
+    service.syncBoxInfo = function(){
+        $http.get("http://travelwodclub.herokuapp.com/api/updateBoxes",{}).then(
+            function(data, status, headers){
+                        console.log('success')
+                        console.log(data)
+                        confirm("Successfully updated "+data.data.length+" boxes")
+            },
+            function(data, status, headers){
+                        console.log('error',data,status)
+            }
+        )
 
+    }
 
     
 

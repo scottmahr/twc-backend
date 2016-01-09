@@ -17,8 +17,8 @@ app.factory('DropIns', ['Restangular', 'State' ,'EditState' ,
         var dropInsList =  dropInsBase.getList();
         dropInsList.then(function(dropInsResult) {
             console.log("Got dropIns:"+dropInsResult.length)
+            //console.log(dropInsResult[2])
             State.dropIns = dropInsResult;
-            EditState.updateNearGyms();
             },function(error) {
                 console.log("error"+error)
         } );
