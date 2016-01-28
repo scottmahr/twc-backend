@@ -66,6 +66,7 @@ var userSchema = new mongoose.Schema({
     name: {type: String, lowercase: true, trim: true,required:true,unique:true},                    
     facebookID: String,
     photoURL: String,
+    splashScreen: { type: Boolean, default: true },
     infusionsoftID: Number,  //this is the infusionsoft ID
     photoID: String,
     dropIns: { type: mongoose.Schema.Types.Mixed , default: [] }, //[boxID,boxName,boxLogoID,dropinDate,verified]
