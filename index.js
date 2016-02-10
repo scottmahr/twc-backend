@@ -326,7 +326,7 @@ router.post('/checkBoxLogin', function(req, res) {
 
     //first, look for that email
     infusionsoft.ContactService
-        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
         .then(function(output){
             console.log(output)
             if(output.length==0){
@@ -335,7 +335,7 @@ router.post('/checkBoxLogin', function(req, res) {
             }
             _.each(output,function(IFuser){
                 console.log(IFuser)
-                if(IFuser.PostalCode == req.body.zip){
+                if(IFuser.Password == req.body.password){
                     console.log('yes',IFuser)
                     
                     //now, lets check the database for a user
@@ -355,7 +355,7 @@ router.post('/checkBoxLogin', function(req, res) {
                         }
                     });
                 }else{
-                    res.json({status:'fail, zip does not match'});
+                    res.json({status:'fail, password does not match'});
                     return;
                 }
             });
@@ -425,7 +425,7 @@ var getCreateUser = function(res, IFuser,fbID, fbURL){
 
 var checkInfusionsoft = function(req,res){
     infusionsoft.ContactService
-    .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode'])
+    .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
     .then(function(output){
         console.log(output)
         if(output.length==0){
@@ -433,7 +433,7 @@ var checkInfusionsoft = function(req,res){
             return;
         }
         //first, if we only have one response, and we have a facebook ID, lets just return it
-        if(output.length==1 && !req.body.zip && req.body.fbID.length){
+        if(output.length==1 && !req.body.password && req.body.fbID.length){
             getCreateUser(res,output[0],req.body.fbID,req.body.fbURL);
             return;
         }
@@ -441,13 +441,13 @@ var checkInfusionsoft = function(req,res){
         //if that doesn't work, look through all the users and find the one with the right zip.
         _.each(output,function(IFuser){
             console.log(IFuser)
-            if(IFuser.PostalCode == req.body.zip){
+            if(IFuser.Password == req.body.password){
                 console.log('yes1',IFuser)
                 getCreateUser(res,IFuser,req.body.fbID,req.body.fbURL);
                 console.log('sent stuff')
                 return;
             }else{
-                res.json({status:'fail, zip does not match'});
+                res.json({status:'fail, password does not match'});
                 //return;
             }
         });
@@ -477,7 +477,7 @@ router.post('/checkLogin', function(req, res) {
                 }
             }
         });
-    }else if(req.body.email && (req.body.fbID || req.body.zip)){
+    }else if(req.body.email && (req.body.fbID || req.body.password)){
         checkInfusionsoft(req,res);
     }
 

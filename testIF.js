@@ -54,7 +54,7 @@ var fields = [
 ];
 
 //console.log(infusionsoft.Contacts)
-
+/*
 infusionsoft.Contacts
     .like(Contact.Groups, '%125%')
     .select(_.pluck(fields,1))
@@ -93,8 +93,8 @@ infusionsoft.Contacts
         //console.log(result);
         console.log(boxes)
     });
-
- /* 
+*/
+ 
 console.log('test')
     infusionsoft.Contacts
     .where(Contact.Email, 'scottmahr@gmail.com')
@@ -112,4 +112,4 @@ console.log('test')
         });
     }); 
 
-     */
+     
