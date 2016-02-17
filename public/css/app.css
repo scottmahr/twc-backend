@@ -168,3 +168,8 @@ body{
 .icon-dislike{
   color:red;
 }
+
+.icon-trash-bin{
+  cursor: pointer;
+  color:red;
+}

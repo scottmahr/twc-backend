@@ -16,10 +16,17 @@
             <md-card-content style="padding-bottom: 80px;">
             <h2 class="md-title">Users</h2>
  
-                <md-list-item style="width:600px;" ng-repeat="user in s.users">
+                <md-list-item style="flex-wrap: wrap;"  ng-repeat="user in s.users">
                     
-                    <b>{{user.name|titlecase}}</b>&nbsp;&nbsp;&nbsp;&nbsp; Drop Ins: {{s.userDropIns(user._id).length}}
+                    <b>{{user.name|titlecase}}</b>
+                    <span style="width:100%;" ng-hide="s.userDropIns(user._id)==0">&nbsp;&nbsp;&nbsp;&nbsp; Drop Ins:</span>
                     
+                    <div style="width:100%;" ng-repeat="dropin in s.userDropIns(user._id)">
+                       &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  {{$index}})&nbsp;&nbsp;{{s.boxName(dropin.boxID)|titlecase}} 
+                       &nbsp;&nbsp;&nbsp; {{dropin.rating}}/5  
+                       &nbsp;&nbsp;"{{dropin.review}}" &nbsp;&nbsp;&nbsp;  
+                       <span ng-click="deleteDropIn(dropin)" class="icon-trash-bin"></span> 
+                    </div> 
                     
                 </md-list-item>
             </md-card-content>
