@@ -174,6 +174,22 @@ var fields = [
     ['yelpLink','_Yelp' ],
 ];
 
+var vendorfields = [
+    ['name','Company'],
+    ['infusionsoftID','Id' ],
+    ['email','Email' ],
+    ['website','Website' ],
+    ['yelpLink','_Yelp' ],
+    ['BriefDescriptionofBusiness','_BriefDescriptionofBusiness'],
+    ['DiscountOffer','_DiscountOffer'],
+    ['DiscountCode','_DiscountCode'],
+    ['OtherDiscountOffer','_OtherDiscountOffer'],
+    ['DiscountOfferMemberLocations','_DiscountOfferMemberLocations'],
+    ['OtherDiscountOfferifselectedabove','_OtherDiscountOfferifselectedabove'],
+    ['DiscountCODEforMemberLocationsvalidforatleast60days','_DiscountCODEforMemberLocationsvalidforatleast60days'],
+    ['DiscountCODEforMemberLocations','_DiscountCODEforMemberLocations'],
+];
+
 
 
 router.get('/', function(req, res) {
@@ -208,7 +224,7 @@ router.post('/helpEmail', function(req, res) {
         .then(function(output){
             console.log(output)
             if(output.length==0){
-                res.json({status:'fail', msg: 'No user found for that email'});
+                res.json({status:'No user found for that email', msg: 'No user found for that email'});
                 return;
             }
             //now, let's send the email
@@ -231,6 +247,23 @@ router.post('/helpEmail', function(req, res) {
  
         });
 });
+
+
+router.get('/getVendors', function(req, res) {
+  //First, we need to find the user and the password
+    infusionsoft.Contacts
+        .like(Contact.Groups, '%211%')
+        .select(_.pluck(vendorfields,1))
+        .orderByDescending('Id')
+        .page(0)
+        .take(200)
+        .toArray()
+        .done(function(result) {
+            res.json({ status:'success',data:result});
+        }); 
+});
+
+
 
 
 router.get('/updateBoxes', function(req, res) {

@@ -53,17 +53,35 @@ var fields = [
     ['yelpLink','_Yelp' ],
 ];
 
+var vendorfields = [
+    ['name','Company'],
+    ['infusionsoftID','Id' ],
+    ['email','Email' ],
+    ['website','Website' ],
+    ['yelpLink','_Yelp' ],
+    ['BriefDescriptionofBusiness','_BriefDescriptionofBusiness'],
+    ['DiscountOffer','_DiscountOffer'],
+    ['DiscountCode','_DiscountCode'],
+    ['OtherDiscountOffer','_OtherDiscountOffer'],
+    ['DiscountOfferMemberLocations','_DiscountOfferMemberLocations'],
+    ['OtherDiscountOfferifselectedabove','_OtherDiscountOfferifselectedabove'],
+    ['DiscountCODEforMemberLocationsvalidforatleast60days','_DiscountCODEforMemberLocationsvalidforatleast60days'],
+    ['DiscountCODEforMemberLocations','_DiscountCODEforMemberLocations'],
+];
+
 //console.log(infusionsoft.Contacts)
-/*
+
 infusionsoft.Contacts
-    .like(Contact.Groups, '%125%')
-    .select(_.pluck(fields,1))
+    .like(Contact.Groups, '%211%')
+    .select(_.pluck(vendorfields,1))
     .orderByDescending('Id')
     .page(0)
-    .take(5)
+    .take(30)
     .toArray()
     .done(function(result) {
 
+        console.log(JSON.stringify(result)) 
+        /*
         //let's put this into the right array
         var boxes = _.map(result,function(contact){
             var output = {};
@@ -89,15 +107,19 @@ infusionsoft.Contacts
             });
             return output;
         });
-        console.log(result.length)
+        */
+        //console.log(result.length)
         //console.log(result);
-        console.log(boxes)
+        //console.log(boxes)
     });
-*/
+
  
+
+
+ /*
 console.log('test')
     infusionsoft.Contacts
-    .where(Contact.Email, 'scottmahr@gmail.com')
+    .where(Contact.Email, 'sales@promixnutrition.com')
     .first()
     .then(function(contact) {
         console.log('got a contact',contact)
@@ -112,4 +134,10 @@ console.log('test')
         });
     }); 
 
-     
+     */
+
+
+
+
+
+
