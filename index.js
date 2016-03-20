@@ -11,6 +11,7 @@ var app = express();
 var fs = require('fs');
 var api = require('infusionsoft-api');
 var base64 = require('base64-stream');
+var sendgrid  = require('sendgrid')('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');
 
 
 app.use(cors());
@@ -199,6 +200,38 @@ router.get('/test', function(req, res) {
     
 });
 
+router.post('/helpEmail', function(req, res) {
+  //First, we need to find the user and the password
+
+    infusionsoft.ContactService
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
+        .then(function(output){
+            console.log(output)
+            if(output.length==0){
+                res.json({status:'fail', msg: 'No user found for that email'});
+                return;
+            }
+            //now, let's send the email
+            var IFuser = output[0];
+             sendgrid.send({
+                to:       IFuser.Email,
+                from:     'info@travelwodclub.com',
+                subject:  'Travel WOD Club Help Desk',
+                text:     'Hi '+IFuser.FirstName+',  Here is your password: '+IFuser.Password,
+                }, function(err, json) {
+                  if (err) { 
+                    return console.error(err); 
+                    res.json({ status: 'error:'+err});
+                }else{
+                    console.log(json);
+                    res.json({ status: 'Email sent'});
+                }
+              
+            });
+ 
+        });
+});
+
 
 router.get('/updateBoxes', function(req, res) {
     //read from mongodb
@@ -303,18 +336,7 @@ router.get('/updateBoxes', function(req, res) {
 
             });
 
-                                
-/*
-
-
-
-
-*/
             console.log('this many'+result.length)
-            //console.log(result);
-            //console.log(boxes)
-            
-            
         });
 
     

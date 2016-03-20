@@ -23,7 +23,8 @@
     "mongodb": "^2.0.45",
     "mongoose": "^4.1.9",
     "underscore": "1.7.0",
-    "base64-stream" :"0.1.2"
+    "base64-stream" :"0.1.2",
+    "sendgrid": "^1.9.2"
   },
   "changelog": [
     {
