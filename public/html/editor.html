@@ -30,8 +30,8 @@
             <md-checkbox ng-change="boxChecked(vendor._id)" ng-model="vendor.checked"></md-checkbox>
             <p>{{vendor.Company}}</p><br>
             
-            <img style="max-width: 300px;" ng-show="!!vendor.ImageID" ng-click="uploadVendorPicture($event,vendor.Id)" ng-src="http://travelwodclub.herokuapp.com/api/logo?id={{vendor.ImageID}}">  
-            <md-icon ng-show="!vendor.ImageID" class="md-secondary icon-plus" aria-label="edit" ng-click="uploadVendorPicture($event,vendor.Id)"></md-icon>
+            <img style="max-width: 300px;" ng-show="!!vendor._ImageID" ng-click="uploadVendorPicture($event,vendor.Id)" ng-src="http://travelwodclub.herokuapp.com/api/logo?id={{vendor._ImageID}}">  
+            <md-icon ng-show="!vendor._ImageID" class="md-secondary icon-plus" aria-label="edit" ng-click="uploadVendorPicture($event,vendor.Id)"></md-icon>
           </md-list-item>
         </md-card-content>
       </md-card>
