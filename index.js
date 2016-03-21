@@ -188,6 +188,7 @@ var vendorfields = [
     ['OtherDiscountOfferifselectedabove','_OtherDiscountOfferifselectedabove'],
     ['DiscountCODEforMemberLocationsvalidforatleast60days','_DiscountCODEforMemberLocationsvalidforatleast60days'],
     ['DiscountCODEforMemberLocations','_DiscountCODEforMemberLocations'],
+    ['ImageID','_ImageID'],
 ];
 
 
@@ -889,6 +890,32 @@ router.route('/boxes/:box_id')
     });
 
 
+
+router.route('/vendors/:vendor_id')
+
+    .post(function(req, res) {
+        if( req==undefined){
+            res.json({ status: 'No Image' });
+        }else{
+            var writestream = gfs.createWriteStream({});
+    
+            var decoder = base64.decode();
+
+            req.pipe(decoder).pipe(writestream);
+            writestream.on('close', function (file) {
+                // do something with `file`
+                console.log('Written To gridfs:'+file._id);
+                
+                //here is where we need to update the vendor with the image
+                infusionsoft.ContactService
+                    .update(req.params.vendor_id, {'ImageID':file._id})
+                    .then(function(contactID) {
+                        console.log('updated a contact',contactID)
+                        res.json({status:'success',Id:contactID,ImageID:file._id});
+                    })
+            });
+        }
+    });
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);

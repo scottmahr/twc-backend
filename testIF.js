@@ -71,6 +71,7 @@ var vendorfields = [
 
 //console.log(infusionsoft.Contacts)
 
+/*
 infusionsoft.Contacts
     .like(Contact.Groups, '%211%')
     .select(_.pluck(vendorfields,1))
@@ -107,7 +108,7 @@ infusionsoft.Contacts
             });
             return output;
         });
-        */
+        
         //console.log(result.length)
         //console.log(result);
         //console.log(boxes)
@@ -116,10 +117,10 @@ infusionsoft.Contacts
  
 
 
- /*
+ 
 console.log('test')
     infusionsoft.Contacts
-    .where(Contact.Email, 'sales@promixnutrition.com')
+    .where(Contact.Email, 'scottmahr@gmail.com')
     .first()
     .then(function(contact) {
         console.log('got a contact',contact)
@@ -134,10 +135,20 @@ console.log('test')
         });
     }); 
 
-     */
+   */   
+
+infusionsoft.ContactService
+    .findByEmail('scottmahr@gmail.com', ['Id', 'FirstName', 'LastName'])
+    .then(function(contact) {
+        console.log('got a contact',contact)
+    })
 
 
+/*
+infusionsoft.ContactService
+    .update(337, {'LastName':'Mahr'})
+    .then(function(contact) {
+        console.log('updated a contact',contact)
+    })
 
-
-
-
+    */

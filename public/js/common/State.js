@@ -16,6 +16,7 @@ app.factory('State', ['$state','$timeout','$http','Globals',
         users : [],  //This is the liftTypeID of the current lift
         boxes : [],
         dropIns : [],
+        vendors: [],
         selectedUser : undefined,
         selectedBox : undefined,
        
@@ -49,6 +50,23 @@ app.factory('State', ['$state','$timeout','$http','Globals',
     }
 
 
+    //get the vendor village stuff
+    service.getVendors = function(){
+        console.log('getting vendors...')
+        var url = "http://travelwodclub.herokuapp.com/api/getVendors"
+        $http({
+            url: url,
+            method: "GET"
+        })
+        .then(function(response) {
+            console.log('Got vendors: ',response.data.data.length)
+            service.vendors = response.data.data;
+            console.log(service.vendors)
+        }, 
+        function(response) { // optional  
+                console.log('Error',JSON.stringify(response))
+        });
+    }
 
 
 
