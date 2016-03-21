@@ -905,10 +905,12 @@ router.route('/vendors/:vendor_id')
             writestream.on('close', function (file) {
                 // do something with `file`
                 console.log('Written To gridfs:'+file._id);
+
+                console.log('updating ',parseInt(req.params.vendor_id), ' with ',String(file._id))
                 
                 //here is where we need to update the vendor with the image
                 infusionsoft.ContactService
-                    .update(req.params.vendor_id, {'ImageID':file._id})
+                    .update(parseInt(req.params.vendor_id), {'_ImageID':String(file._id)})
                     .then(function(contactID) {
                         console.log('updated a contact',contactID)
                         res.json({status:'success',Id:contactID,ImageID:file._id});

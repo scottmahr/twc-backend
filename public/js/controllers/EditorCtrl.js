@@ -130,7 +130,7 @@ function DialogController2($scope,$timeout,$mdDialog,$http,State ) {
                     return box.Id == response.Id;
                 });
                 if(idx>=0){
-                    State.vendors[idx][ImageID] = response.ImageID;
+                    State.vendors[idx]['ImageID'] = response.ImageID;
                     console.log(State.vendors[idx])
                 }
             })

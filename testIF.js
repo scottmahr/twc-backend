@@ -135,7 +135,7 @@ console.log('test')
         });
     }); 
 
-   */   
+      
 
 infusionsoft.ContactService
     .findByEmail('scottmahr@gmail.com', ['Id', 'FirstName', 'LastName'])
@@ -144,7 +144,7 @@ infusionsoft.ContactService
     })
 
 
-/*
+
 infusionsoft.ContactService
     .update(337, {'LastName':'Mahr'})
     .then(function(contact) {
@@ -152,3 +152,10 @@ infusionsoft.ContactService
     })
 
     */
+
+    infusionsoft.ContactService
+                    .update(1009, {'_ImageID':56ef3e425ae77ac83a031178})
+                    .then(function(contactID) {
+                        console.log('updated a contact',1009)
+                        //res.json({status:'success',Id:contactID,ImageID:file._id});
+                    })
