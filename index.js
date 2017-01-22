@@ -149,7 +149,14 @@ app.get('/', function(req, res){
 
 app.use(express.static(__dirname + '/public'));
 
-
+var myFields = [
+    ['name','Company'],
+    ['infusionsoftID','Id' ],
+    ['email','Email' ],
+    ['ofFreeClasses','_ofFreeClasses' ],
+    ['latitude','_Lat',function(x){return parseFloat(x)} ],
+    ['longitude','_Lng',function(x){return parseFloat(x)}  ],
+];
 
 var fields = [
     ['name','Company'],
@@ -198,6 +205,37 @@ router.get('/', function(req, res) {
 });
 
 // ----------------------------------------------------
+
+
+
+router.post('/userLogin', function(req, res) {
+    //read from mongodb
+    console.log(req.body)
+    //first, look for that email
+    infusionsoft.ContactService
+        .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
+        .then(function(output){
+            console.log(output)
+            if(output.length==0){
+                res.json({status:false,msg:'fail, no record found for that email'});
+                return;
+            }
+            _.each(output,function(IFuser){
+                console.log(IFuser)
+                if(IFuser.Password == req.body.password){
+                    console.log('yes',IFuser)
+                    res.json({status:true,msg:'found user'});
+                    return;
+                }else{
+                    res.json({status:false,msg:'fail, password does not match'});
+                    return;
+                }
+            });
+        });
+});
+
+
+
 
 
 router.get('/test', function(req, res) {
@@ -253,13 +291,18 @@ router.post('/helpEmail', function(req, res) {
 router.get('/getVendors', function(req, res) {
   //First, we need to find the user and the password
     infusionsoft.Contacts
-        .like(Contact.Groups, '%211%')
-        .select(_.pluck(vendorfields,1))
+        .like(Contact.Groups, '%542%')  //this is for vendor locations
+        .select(_.pluck(myFields,1))
         .orderByDescending('Id')
         .page(0)
         .take(200)
         .toArray()
         .done(function(result) {
+            result = _.map(result,function(vend){
+                if(vend._Lat){vend._Lat = parseFloat(vend._Lat);}
+                if(vend._Lng){vend._Lng = parseFloat(vend._Lng);}
+                return vend;
+            })
             res.json({ status:'success',data:result});
         }); 
 });
