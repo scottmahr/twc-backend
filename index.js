@@ -152,12 +152,22 @@ app.use(express.static(__dirname + '/public'));
 var myFields = [
     ['name','Company'],
     ['infusionsoftID','Id' ],
-    ['_CheckIns','_CheckIns' ],
     ['email','Email' ],
     ['ofFreeClasses','_ofFreeClasses' ],
     ['latitude','_Lat',function(x){return parseFloat(x)} ],
     ['longitude','_Lng',function(x){return parseFloat(x)}  ],
 ];
+
+var userFields = [
+
+    ['Id','Id'],
+    ['FirstName','FirstName'],
+    ['LastName','LastName'],
+    [ 'Email', 'Email'],
+    ['PostalCode','PostalCode'],
+    ['Password','Password'],
+    ['_CheckIns','_CheckIns' ],
+]
 
 var fields = [
     ['name','Company'],
@@ -211,21 +221,22 @@ router.get('/', function(req, res) {
 
 router.post('/userLogin', function(req, res) {
     //read from mongodb
-    console.log(req.body)
+    //console.log(req.body)
     //first, look for that email
     infusionsoft.ContactService
         .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
+        
         .then(function(output){
-            console.log(output)
+            //console.log(output)
             if(output.length==0){
                 res.json({status:false,msg:'fail, no record found for that email'});
                 return;
             }
             _.each(output,function(IFuser){
-                console.log(IFuser)
+                //console.log(IFuser)
                 if(IFuser.Password == req.body.password){
                     console.log('yes',IFuser)
-                    res.json({status:true,msg:'found user'});
+                    res.json({status:true,msg:'found user',user:IFuser});
                     return;
                 }else{
                     res.json({status:false,msg:'fail, password does not match'});
@@ -236,14 +247,43 @@ router.post('/userLogin', function(req, res) {
 });
 
 
+router.post('/userLogin2', function(req, res) {
+  //First, we need to find the user and the password
+    infusionsoft.Contacts
+        .like('Email', req.body.email)  //this is for vendor locations
+        .select(_.pluck(userFields,1))
+        .page(0)
+        .take(200)
+        .toArray()
+        .done(function(output) {
+           if(output.length==0){
+                res.json({status:false,msg:'fail, no record found for that email'});
+                return;
+            }
+            _.each(output,function(IFuser){
+                //console.log(IFuser)
+                if(IFuser.Password == req.body.password){
+                    //console.log('yes',IFuser)
+                    res.json({status:true,msg:'found user',user:IFuser});
+                    return;
+                }else{
+                    res.json({status:false,msg:'fail, password does not match'});
+                    return;
+                }
+            });
+        }); 
+});
+
+
+
 router.post('/addcheckin', function(req, res) {
     //read from mongodb
-    console.log(req.body)
+    //console.log('addcheckin', req.body)
     
     infusionsoft.ContactService
         .update(parseInt(req.body.id), {'_CheckIns':req.body.checkins})
         .then(function(contactID) {
-            console.log('updated a contact',contactID)
+            //console.log('updated a contact',contactID)
             res.json({status:'success',Id:contactID});
         })
 
