@@ -235,7 +235,40 @@ router.post('/userLogin', function(req, res) {
 });
 
 
+router.post('/addcheckin', function(req, res) {
+    //read from mongodb
+    console.log(req.body)
+    
+    infusionsoft.ContactService
+        .update(parseInt(req.body.id), {'_CheckIns':req.body.id})
+        .then(function(contactID) {
+            console.log('updated a contact',contactID)
+            res.json({status:'success',Id:contactID});
+        })
 
+
+    //first, look for that email
+    // infusionsoft.ContactService
+    //     .findByEmail(req.body.email, ['Id', 'FirstName', 'LastName','Email','PostalCode','Password'])
+    //     .then(function(output){
+    //         console.log(output)
+    //         if(output.length==0){
+    //             res.json({status:false,msg:'fail, no record found for that email'});
+    //             return;
+    //         }
+    //         _.each(output,function(IFuser){
+    //             console.log(IFuser)
+    //             if(IFuser.Password == req.body.password){
+    //                 console.log('yes',IFuser)
+    //                 res.json({status:true,msg:'found user'});
+    //                 return;
+    //             }else{
+    //                 res.json({status:false,msg:'fail, password does not match'});
+    //                 return;
+    //             }
+    //         });
+    //     });
+});
 
 
 router.get('/test', function(req, res) {
@@ -460,6 +493,8 @@ router.post('/checkBoxLogin', function(req, res) {
             });
         });
 });
+
+
 
 
 var getCreateUser = function(res, IFuser,fbID, fbURL){
