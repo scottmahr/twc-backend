@@ -152,6 +152,7 @@ app.use(express.static(__dirname + '/public'));
 var myFields = [
     ['name','Company'],
     ['infusionsoftID','Id' ],
+    ['_CheckIns','_CheckIns' ],
     ['email','Email' ],
     ['ofFreeClasses','_ofFreeClasses' ],
     ['latitude','_Lat',function(x){return parseFloat(x)} ],
@@ -240,7 +241,7 @@ router.post('/addcheckin', function(req, res) {
     console.log(req.body)
     
     infusionsoft.ContactService
-        .update(parseInt(req.body.id), {'_CheckIns':req.body.id})
+        .update(parseInt(req.body.id), {'_CheckIns':req.body.checkins})
         .then(function(contactID) {
             console.log('updated a contact',contactID)
             res.json({status:'success',Id:contactID});
