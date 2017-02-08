@@ -154,6 +154,10 @@ var myFields = [
     ['infusionsoftID','Id' ],
     ['email','Email' ],
     ['ofFreeClasses','_ofFreeClasses' ],
+    ['address.street','StreetAddress1' ],
+    ['address.city','City' ],
+    ['address.state','State' ],
+    ['address.postalCode','PostalCode' ],
     ['latitude','_Lat',function(x){return parseFloat(x)} ],
     ['longitude','_Lng',function(x){return parseFloat(x)}  ],
 ];
