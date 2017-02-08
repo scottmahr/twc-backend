@@ -158,6 +158,7 @@ var myFields = [
     ['address.city','City' ],
     ['address.state','State' ],
     ['address.postalCode','PostalCode' ],
+    ['url','_SmirkPerkPLURL'],
     ['latitude','_Lat',function(x){return parseFloat(x)} ],
     ['longitude','_Lng',function(x){return parseFloat(x)}  ],
 ];
@@ -365,6 +366,26 @@ router.post('/helpEmail', function(req, res) {
         });
 });
 
+
+router.post('/suggestion', function(req, res) {
+  //First, we need to find the user and the password
+    sendgrid.send({
+        to:       'kyle@smirkperk.com',
+        from:     'info@smirkperk.com',
+        subject:  'Suggestions',
+        text:     'This is a suggestion from a user ('+req.body.id+'):  '+req.body.text,
+        }, function(err, json) {
+          if (err) { 
+            return console.error(err); 
+            res.json({ status: 'error:'+err});
+        }else{
+            console.log(json);
+            res.json({ status: 'Email sent'});
+        }
+      
+    });
+ 
+});
 
 router.get('/getVendors', function(req, res) {
   //First, we need to find the user and the password
